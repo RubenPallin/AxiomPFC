@@ -1,22 +1,30 @@
 import './FeaturedProducts.css';
-
-const products = [
-  { id: 1, name: "Sudadera Oversized", price: "49.99€", image: "/path/to/product1.jpg" },
-  { id: 2, name: "Camiseta Básica", price: "29.99€", image: "/path/to/product2.jpg" },
-  { id: 3, name: "Pantalón Jogger", price: "59.99€", image: "/path/to/product3.jpg" },
-  { id: 4, name: "Chaqueta Corta", price: "79.99€", image: "/path/to/product4.jpg" }
-];
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function FeaturedProducts() {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    // Llamar al endpoint de productos destacados
+    axios.get("http://localhost:3000/products/destacados")
+      .then(response => {
+        setProducts(response.data);
+      })
+      .catch(error => {
+        console.error('Error al obtener productos:', error);
+      });
+  }, []);
+
   return (
     <div className="featured-products">
       <h2>Productos Destacados</h2>
       <div className="product-grid">
         {products.map((product) => (
           <div className="product-card" key={product.id}>
-            <img src={product.image} alt={product.name} />
+            <img src={product.image_url} alt={product.name} />
             <h3>{product.name}</h3>
-            <p>{product.price}</p>
+            <p>{product.price}€</p>
             <button>Añadir al Carrito</button>
           </div>
         ))}

@@ -1,0 +1,60 @@
+/* Contenedor de la página de productos */
+.products-page {
+    display: flex;
+    margin-top: 100px; /* Para que no se superponga con la cabecera */
+  }
+  
+  .categories-sidebar {
+    width: 250px;
+    padding: 20px;
+    background-color: #f4f4f4;
+  }
+  
+  .categories-sidebar h3 {
+    font-size: 24px;
+  }
+  
+  .categories-sidebar ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .categories-sidebar ul li {
+    cursor: pointer;
+    padding: 10px;
+    font-size: 18px;
+  }
+  
+  .categories-sidebar ul li:hover {
+    background-color: #ddd;
+  }
+  
+  .products-list {
+    flex: 1;
+    padding: 20px;
+  }
+  
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  
+  .product-card {
+    padding: 20px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+  
+  .product-card img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .product-card button {
+    background-color: #f04f23;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+  }

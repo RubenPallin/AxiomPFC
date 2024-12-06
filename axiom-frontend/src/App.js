@@ -2,24 +2,31 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import MainHero from './components/main/MainHero';
 import FeaturedProducts from './components/main/FeaturedProducts';
 import PromoBanner from './components/main/PromoBanner';
+import Header from './components/main/Header';
+import Products from './components/products/Products';
 import './App.css';
 
 function App() {
   return (
     <Router>
-      <Routes>
-        {/* Redirige automáticamente a /mainAxiom */}
-        <Route path="/" element={<Navigate to="/mainAxiom" />} />
+      <div className="App">
+        <Header /> {/* Colocamos la cabecera arriba */}
 
-        {/* Ruta para /mainAxiom */}
-        <Route path="/mainAxiom" element={
-          <div className="App">
-            <MainHero />
-            <FeaturedProducts />
-            <PromoBanner />
-          </div>
-        } />
-      </Routes>
+        <Routes>
+          {/* Redirige automáticamente a /mainAxiom */}
+          <Route path="/" element={<Navigate to="/mainAxiom" />} />
+
+          {/* Ruta para /mainAxiom */}
+          <Route path="/mainAxiom" element={
+            <div>
+              <MainHero />
+              <FeaturedProducts />
+              <PromoBanner />
+            </div>
+          } />
+          <Route path="/products" element={<Products />} />
+        </Routes>
+      </div>
     </Router>
   );
 }

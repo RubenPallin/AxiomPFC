@@ -18,11 +18,6 @@ export class ProductsService {
     return this.productsRepository.find({ relations: ['category'] });
   }
 
-  // Obtener productos por categoría
-  async findByCategory(categoryId: number): Promise<Products[]> {
-    return this.productsRepository.find({ where: { category: { id: categoryId } }, relations: ['category'] });
-  }
-
   // Obtener productos destacados (puedes usar un flag o filtrar algunos productos manualmente)
   async findFeatured(): Promise<Products[]> {
     return this.productsRepository.find({
@@ -44,5 +39,16 @@ export class ProductsService {
   private getRandomItems(arr: any[], num: number): any[] {
     const shuffled = arr.sort(() => 0.5 - Math.random()); // Mezcla aleatoriamente los productos
     return shuffled.slice(0, num); // Devuelve solo los primeros 'num' productos
+  }
+  async findByCategory(categoryId: number): Promise<Products[]> {
+    if (categoryId === null) {
+      return this.findAll();
+    }
+    return this.productsRepository.find({
+      where: {
+        category: { id: categoryId }
+      },
+      relations: ['category']
+    });
   }
 }

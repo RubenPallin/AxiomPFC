@@ -51,4 +51,9 @@ export class ProductsService {
       relations: ['category']
     });
   }
+
+  async findOne(id: number): Promise<Products> {
+    return this.productsRepository.findOne({ where: { id } });
+  }
+  
 }

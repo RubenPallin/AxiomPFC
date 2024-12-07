@@ -28,4 +28,10 @@ export class ProductsController {
     return this.productsService.findFeatured();
   }
 
+  // Obtener un producto por su ID
+@Get(':id')
+async getProductById(@Param('id') id: number): Promise<Products> {
+  return this.productsService.findOne(id); // Implementar este método en el servicio
+}
+
 }

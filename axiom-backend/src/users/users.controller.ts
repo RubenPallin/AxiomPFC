@@ -52,18 +52,18 @@ export class UsersController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() body: LoginUserBody) {
+  async login(@Body() body) {
     const { email, password } = body;
     const user = await this.usersService.findOneByEmail(email);
 
     if (!user) {
-      throw new UnauthorizedException('Usuario no encontrado');
+      return { message: 'Usuario no encontrado' };
     }
 
     const isPasswordValid = await this.usersService.validatePassword(password, user.password);
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Credenciales inválidas');
+      return { message: 'Credenciales inválidas' };
     }
 
     const token = await this.usersService.generateJwt(user);

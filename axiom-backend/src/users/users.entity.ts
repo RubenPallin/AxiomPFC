@@ -15,6 +15,9 @@ export class Users {
   @Column()
   name: string;
 
+  @Column()
+  phone: string;
+
   @OneToMany(() => Carts, cart => cart.user)
   carts: Carts[]; // Relación con los carritos
 

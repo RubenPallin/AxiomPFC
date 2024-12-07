@@ -14,12 +14,13 @@ export class UsersService {
   ) {}
 
   // Crear un nuevo usuario
-  async create(email: string, password: string, name: string): Promise<Users> {
+  async create(email: string, password: string, name: string, phone: string): Promise<Users> {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = this.usersRepository.create({
       email,
       password: hashedPassword,
       name,
+      phone,  // Aquí añadimos el teléfono
     });
     return this.usersRepository.save(user);
   }
@@ -38,5 +39,9 @@ export class UsersService {
   async generateJwt(user: Users): Promise<string> {
     const payload = { username: user.email, sub: user.id };
     return this.jwtService.sign(payload);
+  }
+
+  async findAll(): Promise<Users[]> {
+    return this.usersRepository.find();
   }
 }

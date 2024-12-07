@@ -5,13 +5,14 @@ import PromoBanner from './components/main/PromoBanner';
 import Header from './components/main/Header';
 import Products from './components/products/Products';
 import Cart from './components/cart/Cart';
+import Register from './components/register/Register';
 import './App.css';
 
 function App() {
   return (
     <Router>
       <div className="App">
-        <Header/>
+      {!['/login', '/register'].includes(window.location.pathname) && <Header />}
         
         <Routes>
           <Route path="/" element={<Navigate to="/mainAxiom" />} />
@@ -32,6 +33,8 @@ function App() {
                 <Cart />
             }
           />
+
+          <Route path="/register" element={<Register />} />
         </Routes>
       </div>
     </Router>

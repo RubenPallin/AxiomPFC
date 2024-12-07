@@ -1,30 +1,37 @@
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'; // Importar Navigate para redirección
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import MainHero from './components/main/MainHero';
 import FeaturedProducts from './components/main/FeaturedProducts';
 import PromoBanner from './components/main/PromoBanner';
 import Header from './components/main/Header';
 import Products from './components/products/Products';
+import Cart from './components/cart/Cart';
 import './App.css';
 
 function App() {
   return (
     <Router>
       <div className="App">
-        <Header /> {/* Colocamos la cabecera arriba */}
-
+        <Header/>
+        
         <Routes>
-          {/* Redirige automáticamente a /mainAxiom */}
           <Route path="/" element={<Navigate to="/mainAxiom" />} />
-
-          {/* Ruta para /mainAxiom */}
-          <Route path="/mainAxiom" element={
-            <div>
-              <MainHero />
-              <FeaturedProducts />
-              <PromoBanner />
-            </div>
-          } />
+          <Route
+            path="/mainAxiom"
+            element={
+              <div>
+                <MainHero />
+                <FeaturedProducts />
+                <PromoBanner />
+              </div>
+            }
+          />
           <Route path="/products" element={<Products />} />
+          <Route
+            path="/cart"
+            element={
+                <Cart />
+            }
+          />
         </Routes>
       </div>
     </Router>

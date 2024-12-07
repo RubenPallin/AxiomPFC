@@ -1,25 +1,47 @@
-import { Controller, Get, Post, Param, Body, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Patch } from '@nestjs/common';
 import { CartsService } from './carts.service';
 
-@Controller('cart')
+@Controller('carts')
 export class CartsController {
   constructor(private readonly cartsService: CartsService) {}
 
-  // Obtener el carrito de un usuario
+  // Obtener todos los productos del carrito
   @Get(':userId')
-  async getUserCart(@Param('userId') userId: number) {
-    return this.cartsService.getUserCart(userId);
+  async getCartItems(@Param('userId') userId: number) {
+    return this.cartsService.getCartByUser(userId);
   }
 
-  // Añadir un producto al carrito
-  @Post('add')
-  async addToCart(@Body() body: { userId: number, productId: number, quantity: number }) {
-    return this.cartsService.addToCart(body.userId, body.productId, body.quantity);
+  // Agregar un producto al carrito
+  @Post()
+  async addToCart(@Body() body: any) {
+    const { userId, productId, quantity } = body;
+
+    // Validación manual de los datos
+    if (!userId || !productId || !quantity) {
+      throw new Error('Todos los campos (userId, productId, quantity) son obligatorios');
+    }
+
+    return this.cartsService.addProductToCart(userId, productId, quantity);
+  }
+
+  // Actualizar la cantidad de un producto en el carrito
+  @Patch(':cartId')
+  async updateCartItem(
+    @Param('cartId') cartId: number,
+    @Body() body: any,
+  ) {
+    const { quantity } = body;
+
+    if (!quantity || quantity < 1) {
+      throw new Error('La cantidad debe ser un número mayor a 0');
+    }
+
+    return this.cartsService.updateCartItem(cartId, quantity);
   }
 
   // Eliminar un producto del carrito
-  @Delete('remove')
-  async removeFromCart(@Body() body: { userId: number, productId: number }) {
-    return this.cartsService.removeFromCart(body.userId, body.productId);
+  @Delete(':cartId')
+  async removeCartItem(@Param('cartId') cartId: number) {
+    return this.cartsService.removeItemFromCart(cartId);
   }
 }

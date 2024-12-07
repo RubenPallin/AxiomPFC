@@ -10,48 +10,58 @@ export class CartsService {
   constructor(
     @InjectRepository(Carts)
     private cartsRepository: Repository<Carts>,
-    @InjectRepository(Users)
-    private usersRepository: Repository<Users>,
-    @InjectRepository(Products)
-    private productsRepository: Repository<Products>,
   ) {}
 
-  // Obtener el carrito de un usuario
-  async getUserCart(userId: number): Promise<Carts[]> {
+  // Obtener productos del carrito por usuario
+  async getCartByUser(userId: number) {
     return this.cartsRepository.find({
-      where: { user: { id: userId } }, // Aquí se pasa el objeto correctamente
-      relations: ['product'],
+      where: { user: { id: userId } },
+      relations: ['product'], // Incluye la relación con productos
     });
   }
 
-  // Añadir un producto al carrito
-  async addToCart(userId: number, productId: number, quantity: number): Promise<Carts> {
-    const user = await this.usersRepository.findOne({
-      where: { id: userId }, 
-    });
-    const product = await this.productsRepository.findOne({
-      where: { id: productId }, 
+  // Agregar un producto al carrito
+  async addProductToCart(userId: number, productId: number, quantity: number) {
+    const existingCartItem = await this.cartsRepository.findOne({
+      where: { user: { id: userId }, product: { id: productId } },
     });
 
-    if (!user || !product) {
-      throw new Error('User or product not found');
+    if (existingCartItem) {
+      // Si el producto ya está en el carrito, solo actualizamos la cantidad
+      existingCartItem.quantity += quantity;
+      return this.cartsRepository.save(existingCartItem);
     }
 
-    const cartItem = this.cartsRepository.create({ user, product, quantity });
+    // Crear un nuevo item en el carrito
+    const newCartItem = this.cartsRepository.create({
+      user: { id: userId },
+      product: { id: productId },
+      quantity,
+    });
+
+    return this.cartsRepository.save(newCartItem);
+  }
+
+  // Actualizar la cantidad de un producto en el carrito
+  async updateCartItem(cartId: number, quantity: number) {
+    const cartItem = await this.cartsRepository.findOne({ where: { id: cartId } });
+
+    if (!cartItem) {
+      throw new Error('El producto no existe en el carrito');
+    }
+
+    cartItem.quantity = quantity;
     return this.cartsRepository.save(cartItem);
   }
 
   // Eliminar un producto del carrito
-  async removeFromCart(userId: number, productId: number): Promise<void> {
-    const cartItem = await this.cartsRepository.findOne({
-      where: {
-        user: { id: userId },
-        product: { id: productId }, 
-      },
-    });
+  async removeItemFromCart(cartId: number) {
+    const cartItem = await this.cartsRepository.findOne({ where: { id: cartId } });
 
-    if (cartItem) {
-      await this.cartsRepository.remove(cartItem);
+    if (!cartItem) {
+      throw new Error('El producto no existe en el carrito');
     }
+
+    return this.cartsRepository.remove(cartItem);
   }
 }

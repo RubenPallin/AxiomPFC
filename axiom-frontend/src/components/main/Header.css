@@ -1,116 +1,197 @@
 /* Estilos generales para la cabecera */
 .header {
-    position: fixed;
-    top: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  padding: 10px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 100%;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+/* Estilo para el logo */
+.logo a {
+  font-size: 28px;
+  font-weight: 600;
+  text-decoration: none;
+  color: #000;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* Menú de navegación */
+.nav-menu {
+  display: flex;
+  justify-content: center;
+  flex-grow: 1;
+  margin: 0;
+  list-style: none;
+}
+
+.nav-menu ul {
+  display: flex;
+}
+
+.nav-menu ul li {
+  margin-right: 30px;
+}
+
+.nav-menu ul li a {
+  text-decoration: none;
+  color: #333;
+  font-size: 16px;
+  padding: 10px;
+  text-transform: uppercase;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.nav-menu ul li a:hover {
+  color: #f04f23; /* Color de hover */
+}
+
+/* Sección derecha (carrito, bienvenida, logout) */
+.right-section {
+  display: flex;
+  align-items: center;
+}
+
+/* Icono del carrito */
+.cart-icon {
+  margin-right: 20px;
+}
+
+.cart-icon a img {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+/* Estilos para la sección de usuario */
+.user-section {
+  display: flex;
+  align-items: center;
+}
+
+.welcome-message {
+  margin-right: 15px;
+  font-size: 14px;
+}
+
+.logout-button {
+  background-color: #f04f23;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.logout-button:hover {
+  background-color: #d03f1d;
+}
+
+/* Estilos para los enlaces de autenticación */
+.auth-links {
+  display: flex;
+}
+
+.auth-link {
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+  margin-left: 15px;
+}
+
+.auth-link:hover {
+  color: #f04f23;
+}
+
+/* Botón para abrir el menú en dispositivos móviles */
+.menu-toggle button {
+  background: none;
+  border: none;
+  font-size: 30px;
+  cursor: pointer;
+  display: none; /* Ocultar el botón en pantallas grandes */
+}
+
+/* Estilos para cuando el menú está abierto en móviles */
+.nav-menu.active {
+  display: block;
+}
+
+/* Estilos para pantallas pequeñas */
+@media (max-width: 768px) {
+  .nav-menu {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+    background-color: #fff;
+    position: absolute;
+    top: 100%;
     left: 0;
     right: 0;
-    background-color: #fff;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    padding: 10px 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 100%;
   }
-  
-  .header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-  }
-  
-  /* Estilo para el logo */
-  .logo a {
-    font-size: 28px;
-    font-weight: 600;
-    text-decoration: none;
-    color: #000;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-  }
-  
-  /* Menú de navegación */
-  .nav-menu {
-    display: flex;
-    justify-content: center;
-    flex-grow: 1;
-    margin: 0;
-    list-style: none;
-  }
-  
-  .nav-menu ul {
-    display: flex;
-  }
-  
-  .nav-menu ul li {
-    margin-right: 30px;
-  }
-  
-  .nav-menu ul li a {
-    text-decoration: none;
-    color: #333;
-    font-size: 16px;
-    padding: 10px;
-    text-transform: uppercase;
-    font-weight: 500;
-    transition: color 0.3s;
-  }
-  
-  .nav-menu ul li a:hover {
-    color: #f04f23; /* Color de hover */
-  }
-  
-  /* Icono del carrito */
-  .cart-icon {
-    margin-left: auto;
-  }
-  
-  .cart-icon a img {
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-  }
-  
-  /* Botón para abrir el menú en dispositivos móviles */
-  .menu-toggle button {
-    background: none;
-    border: none;
-    font-size: 30px;
-    cursor: pointer;
-    display: none; /* Ocultar el botón en pantallas grandes */
-  }
-  
-  /* Estilos para cuando el menú está abierto en móviles */
+
   .nav-menu.active {
+    display: flex;
+  }
+
+  .menu-toggle button {
     display: block;
   }
-  
-  /* Estilos para pantallas pequeñas */
-  @media (max-width: 768px) {
-    .nav-menu {
-      display: none;
-      flex-direction: column;
-      width: 100%;
-      text-align: center;
-      background-color: #fff;
-    }
-  
-    .nav-menu.active {
-      display: flex;
-    }
-  
-    .menu-toggle button {
-      display: block;
-    }
-  
-    .nav-menu ul li {
-      margin-right: 0;
-      padding: 10px 0;
-    }
-  
-    .cart-icon {
-      display: none; /* Ocultar el carrito en pantallas pequeñas */
-    }
+
+  .nav-menu ul {
+    flex-direction: column;
   }
+
+  .nav-menu ul li {
+    margin-right: 0;
+    padding: 10px 0;
+  }
+
+  .right-section {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .cart-icon {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  .user-section {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .welcome-message {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  .auth-links {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .auth-link {
+    margin-left: 0;
+    margin-bottom: 10px;
+  }
+}

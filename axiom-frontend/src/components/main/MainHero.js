@@ -5,7 +5,7 @@ function MainHero() {
   const navigate = useNavigate(); 
 
   const handleClick = () => {
-    navigate('/mainAxiom'); // Redirige a la ruta /mainAxiom
+    navigate('/products'); 
   };
 
   return (

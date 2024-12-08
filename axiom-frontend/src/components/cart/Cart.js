@@ -1,50 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useCart } from './CartContext';
 import './Cart.css';
 
 const Cart = () => {
-  const userId = 1; // Reemplazar con el ID del usuario autenticado
-  const [cartItems, setCartItems] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { cartItems, removeFromCart, updateCartItemQuantity } = useCart();
 
-  // Cargar los productos del carrito al iniciar
-  useEffect(() => {
-    const fetchCartItems = async () => {
-      try {
-        const response = await axios.get(`/cart/${userId}`);
-        setCartItems(response.data);
-      } catch (error) {
-        console.error('Error al cargar el carrito:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCartItems();
-  }, [userId]);
-
-  // Eliminar un producto del carrito
-  const handleRemove = async (cartItemId) => {
-    try {
-      await axios.delete(`/cart/${cartItemId}`);
-      setCartItems(cartItems.filter((item) => item.id !== cartItemId));
-    } catch (error) {
-      console.error('Error al eliminar el producto:', error);
-    }
+  const handleRemove = (itemId) => {
+    removeFromCart(itemId);
   };
 
-  // Finalizar la compra
-  const handleCheckout = async () => {
-    try {
-      await axios.post(`/cart/checkout/${userId}`);
-      alert('Compra realizada con éxito');
-      setCartItems([]); // Vaciar el carrito
-    } catch (error) {
-      console.error('Error al finalizar la compra:', error);
-    }
+  const handleQuantityChange = (itemId, newQuantity) => {
+    updateCartItemQuantity(itemId, newQuantity);
   };
 
-  if (loading) return <p>Cargando carrito...</p>;
+  const calculateTotal = () => {
+    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
+  };
 
   return (
     <div className="cart">
@@ -52,23 +22,35 @@ const Cart = () => {
       {cartItems.length === 0 ? (
         <p>Tu carrito está vacío</p>
       ) : (
-        <div>
+        <>
           <ul className="cart-items">
             {cartItems.map((item) => (
               <li key={item.id} className="cart-item">
-                <img src={item.product.image} alt={item.product.name} />
+                <img src={item.image_url} alt={item.name} />
                 <div>
-                  <p>{item.product.name}</p>
-                  <p>Cantidad: {item.quantity}</p>
+                  <h3>{item.name}</h3>
+                  <p>Precio: €{item.price}</p>
+                  <div>
+                    <label>
+                      Cantidad:
+                      <input
+                        type="number"
+                        min="1"
+                        value={item.quantity}
+                        onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))}
+                      />
+                    </label>
+                  </div>
                   <button onClick={() => handleRemove(item.id)}>Eliminar</button>
                 </div>
               </li>
             ))}
           </ul>
-          <button className="checkout-button" onClick={handleCheckout}>
-            Comprar ahora
-          </button>
-        </div>
+          <div className="cart-total">
+            <h3>Total: €{calculateTotal()}</h3>
+            <button className="checkout-button">Proceder al pago</button>
+          </div>
+        </>
       )}
     </div>
   );

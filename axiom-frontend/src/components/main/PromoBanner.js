@@ -11,7 +11,7 @@ function PromoBanner() {
   return (
     <div className="promo-banner">
       <div className="promo-content">
-        <h2>Oferta Exclusiva</h2>
+        <h2 className='h2_promo'>Oferta Exclusiva</h2>
         <p>20% de descuento en tu primer pedido</p>
         <button onClick={handleClick}>Descubre Más</button>
       </div>

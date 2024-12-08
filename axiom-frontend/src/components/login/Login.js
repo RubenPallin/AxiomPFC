@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useAuth } from '../AuthContext';
 import './Login.css';
 
 const Login = () => {
@@ -9,6 +11,8 @@ const Login = () => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,8 +31,17 @@ const Login = () => {
       const response = await axios.post('http://localhost:3000/auth/login', formData);
       const { access_token } = response.data;
       localStorage.setItem('token', access_token);
-      // Redirigir al usuario a la página principal o dashboard
-      window.location.href = '/mainAxiom';
+
+      // Fetch user data
+      const userResponse = await axios.get('http://localhost:3000/auth/users', {
+        headers: { Authorization: `Bearer ${access_token}` }
+      });
+
+      // Update AuthContext with user data
+      login(userResponse.data);
+
+      // Redirect to main page
+      navigate('/mainAxiom');
     } catch (err) {
       setError(err.response?.data?.message || 'Error al iniciar sesión. Por favor, intente nuevamente.');
     } finally {

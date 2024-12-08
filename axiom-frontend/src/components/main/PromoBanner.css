@@ -10,10 +10,11 @@
   .promo-content {
     text-align: center;
   }
-  
-  .promo-content h2 {
+
+  .h2_promo{
     font-size: 2rem;
     margin-bottom: 1rem;
+    color: white;
   }
   
   .promo-content p {

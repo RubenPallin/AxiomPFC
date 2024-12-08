@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Patch, BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Patch, UseGuards } from '@nestjs/common';
 import { CartsService } from './carts.service';
 
 @Controller('carts')
@@ -13,19 +13,10 @@ export class CartsController {
 
   // Agregar un producto al carrito
   @Post()
-  async addToCart(@Body() body: any) {
+  async addToCart(@Body() body: { userId: number; productId: number; quantity: number }) {
+    console.log('Received body:', body);
     const { userId, productId, quantity } = body;
-
-    if (!userId || !productId || !quantity) {
-      throw new BadRequestException('Todos los campos (userId, productId, quantity) son obligatorios');
-    }
-
-    try {
-      const cartItem = await this.cartsService.addProductToCart(userId, productId, quantity);
-      return cartItem;
-    } catch (error) {
-      throw new InternalServerErrorException('Error al añadir el producto al carrito');
-    }
+    return this.cartsService.addProductToCart(userId, productId, quantity);
   }
 
   // Actualizar la cantidad de un producto en el carrito

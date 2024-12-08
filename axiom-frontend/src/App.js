@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import MainHero from './components/main/MainHero';
 import FeaturedProducts from './components/main/FeaturedProducts';
@@ -8,29 +9,32 @@ import Cart from './components/cart/Cart';
 import Register from './components/register/Register';
 import ProductDetails from './components/details/ProductDetails';
 import { CartProvider } from './components/cart/CartContext';
-import { AuthProvider } from './components/AuthContext';
+import { AuthProvider, useAuth } from './components/AuthContext';
 import AxiomInfo from './components/info/AxiomInfo';
 import './App.css';
 import Login from './components/login/Login';
 
-function App() {
+function AppContent() {
+  const { loading } = useAuth();
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <Router>
-      <AuthProvider>
-        <CartProvider>
-          <div className="App">
-            {!['/login', '/register'].includes(window.location.pathname) && <Header />}
-            
-            <Routes>
+    <CartProvider>
+      <div className="App">
+        <Header />
+        <Routes>
               <Route path="/" element={<Navigate to="/mainAxiom" />} />
               <Route
                 path="/mainAxiom"
                 element={
-                  <div>
+                  <>
                     <MainHero />
                     <FeaturedProducts />
                     <PromoBanner />
-                  </div>
+                  </>
                 }
               />
               <Route path="/products" element={<Products />} />
@@ -39,13 +43,20 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/products/:id" element={<ProductDetails />} />
               <Route path='/info' element={<AxiomInfo />} />
-            </Routes>
-          </div>
-        </CartProvider>
+        </Routes>
+      </div>
+    </CartProvider>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <AuthProvider>
+        <AppContent />
       </AuthProvider>
     </Router>
   );
 }
 
 export default App;
-

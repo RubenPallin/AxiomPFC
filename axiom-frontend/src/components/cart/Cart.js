@@ -1,20 +1,42 @@
+import React, { useEffect } from 'react';
 import { useCart } from './CartContext';
+import { useAuth } from '../AuthContext';
 import './Cart.css';
 
 const Cart = () => {
-  const { cartItems, removeFromCart, updateCartItemQuantity } = useCart();
+  const { cartItems, removeFromCart, updateCartItemQuantity, fetchCartItems } = useCart();
+  const { user } = useAuth();
 
-  const handleRemove = (itemId) => {
-    removeFromCart(itemId);
+  useEffect(() => {
+    if (user) {
+      fetchCartItems(user.id);
+    }
+  }, [user, fetchCartItems]);
+
+  const handleRemove = async (itemId) => {
+    try {
+      await removeFromCart(itemId);
+    } catch (error) {
+      console.error('Error al eliminar el producto del carrito:', error);
+    }
   };
 
-  const handleQuantityChange = (itemId, newQuantity) => {
-    updateCartItemQuantity(itemId, newQuantity);
+  const handleQuantityChange = async (itemId, newQuantity) => {
+    try {
+      await updateCartItemQuantity(itemId, newQuantity);
+      await fetchCartItems(); // Actualizar el carrito después de cambiar la cantidad
+    } catch (error) {
+      console.error('Error al actualizar la cantidad:', error);
+    }
   };
 
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
   };
+
+  if (!user) {
+    return <p>Por favor, inicia sesión para ver tu carrito.</p>;
+  }
 
   return (
     <div className="cart">

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useAuth } from '../AuthContext';
 import './Login.css';
 
@@ -28,22 +27,14 @@ const Login = () => {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:3000/auth/login', formData);
-      const { access_token } = response.data;
-      localStorage.setItem('token', access_token);
-
-      // Fetch user data
-      const userResponse = await axios.get('http://localhost:3000/auth/users', {
-        headers: { Authorization: `Bearer ${access_token}` }
-      });
-
-      // Update AuthContext with user data
-      login(userResponse.data);
-
-      // Redirect to main page
-      navigate('/mainAxiom');
+      const success = await login(formData.email, formData.password);
+      if (success) {
+        navigate('/mainAxiom');
+      } else {
+        setError('Credenciales inválidas. Por favor, intente nuevamente.');
+      }
     } catch (err) {
-      setError(err.response?.data?.message || 'Error al iniciar sesión. Por favor, intente nuevamente.');
+      setError('Error al iniciar sesión. Por favor, intente nuevamente.');
     } finally {
       setLoading(false);
     }

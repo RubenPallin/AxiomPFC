@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, HttpCode, HttpStatus, BadRequestException, ConflictException, UnauthorizedException } from '@nestjs/common';
+import { Controller, Post, Get, Body, HttpCode, HttpStatus, BadRequestException, ConflictException, UnauthorizedException, UseGuards, Request } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Users } from './users.entity';
 import { IsEmail, IsString, MinLength, Matches } from 'class-validator';
@@ -20,7 +20,7 @@ class RegisterUserBody {
   phone: string;
 }
 
-class LoginUserBody {
+class LoginUserDto {
   @IsEmail({}, { message: 'Debe proporcionar un email válido' })
   email: string;
 
@@ -52,18 +52,18 @@ export class UsersController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() body) {
-    const { email, password } = body;
+  async login(@Body() loginUserDto: LoginUserDto) {
+    const { email, password } = loginUserDto;
     const user = await this.usersService.findOneByEmail(email);
 
     if (!user) {
-      return { message: 'Usuario no encontrado' };
+      throw new UnauthorizedException('Credenciales inválidas');
     }
 
     const isPasswordValid = await this.usersService.validatePassword(password, user.password);
 
     if (!isPasswordValid) {
-      return { message: 'Credenciales inválidas' };
+      throw new UnauthorizedException('Credenciales inválidas');
     }
 
     const token = await this.usersService.generateJwt(user);
@@ -79,4 +79,16 @@ export class UsersController {
     });
   }
 
+  @Post('check-user')
+  async checkUser(@Body() body: { email: string }) {
+    const user = await this.usersService.findOneByEmail(body.email);
+    return { exists: !!user };
+  }
+
+  @Get('users/me')
+  async getCurrentUser(@Request() req) {
+    const user = await this.usersService.findOneById(req.user.id);
+    const { password, ...result } = user;
+    return result;
+  }
 }

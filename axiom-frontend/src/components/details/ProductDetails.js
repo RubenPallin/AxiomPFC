@@ -32,18 +32,28 @@ const ProductDetails = () => {
       navigate('/login');
       return;
     }
-
+  
     setIsAddingToCart(true);
     setAddToCartMessage('');
-
+  
     try {
-      console.log('Adding to cart:', { product, user });
-      await addToCart({
+      // Realizar la petición POST al backend para agregar el producto al carrito
+      const response = await axios.post('/carts', {
+        userId: user.id, // Aquí usamos el ID del usuario autenticado
+        productId: product.id, // ID del producto actual
+        quantity: 1 // Cantidad inicial
+      });
+  
+      console.log('Producto añadido al carrito:', response.data);
+  
+      // Si tienes un contexto global para el carrito, actualiza su estado aquí
+      addToCart({
         id: product.id,
         name: product.name,
         price: product.price,
         image_url: product.image_url
       });
+  
       setAddToCartMessage('Producto añadido al carrito con éxito');
     } catch (error) {
       console.error('Error al añadir al carrito:', error);

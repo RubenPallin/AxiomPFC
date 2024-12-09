@@ -11,14 +11,15 @@ export const CartProvider = ({ children }) => {
   const navigate = useNavigate();
 
   const fetchCartItems = useCallback(async () => {
-    if (loading) return;
+    if (loading) return; // Si está cargando, no intentes obtener los datos.
     
     if (!user) {
       console.log('No user logged in');
       return;
     }
-    
+  
     try {
+      console.log('Fetching cart for user ID:', user.id);
       const response = await axios.get(`/carts/${user.id}`);
       console.log('Cart items:', response.data);
       setCartItems(response.data);

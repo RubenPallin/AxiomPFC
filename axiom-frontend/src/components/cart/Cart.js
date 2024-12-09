@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useCart } from './CartContext';
 import { useAuth } from '../AuthContext';
 import './Cart.css';
@@ -6,6 +6,7 @@ import './Cart.css';
 const Cart = () => {
   const { cartItems, removeFromCart, updateCartItemQuantity, fetchCartItems } = useCart();
   const { user } = useAuth();
+  const [paymentMessage, setPaymentMessage] = useState('');
 
   useEffect(() => {
     if (user) {
@@ -21,6 +22,11 @@ const Cart = () => {
     }
   };
 
+  // Función que simula el pago
+  const handleProceedToPayment = () => {
+    setPaymentMessage('Pago ficticio realizado!');
+  };
+
   const handleQuantityChange = async (itemId, newQuantity) => {
     try {
       await updateCartItemQuantity(itemId, newQuantity);
@@ -30,8 +36,9 @@ const Cart = () => {
     }
   };
 
+  // Calcular el precio total
   const calculateTotal = () => {
-    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
+    return cartItems.reduce((total, item) => total + item.product.price * item.quantity, 0).toFixed(2);
   };
 
   if (!user) {
@@ -48,10 +55,10 @@ const Cart = () => {
           <ul className="cart-items">
             {cartItems.map((item) => (
               <li key={item.id} className="cart-item">
-                <img src={item.image_url} alt={item.name} />
+                <img src={item.product.image_url} alt={item.product.name} className="product-image" />
                 <div>
-                  <h3>{item.name}</h3>
-                  <p>Precio: €{item.price}</p>
+                  <h3>{item.product.name}</h3>
+                  <p>Precio: €{item.product.price}</p>  {/* Muestra el precio */}
                   <div>
                     <label>
                       Cantidad:
@@ -70,7 +77,8 @@ const Cart = () => {
           </ul>
           <div className="cart-total">
             <h3>Total: €{calculateTotal()}</h3>
-            <button className="checkout-button">Proceder al pago</button>
+            <button onClick={handleProceedToPayment}>Proceder al pago</button>
+            {paymentMessage && <div className="payment-message">{paymentMessage}</div>}
           </div>
         </>
       )}

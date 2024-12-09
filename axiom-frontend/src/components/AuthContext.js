@@ -22,7 +22,10 @@ export const AuthProvider = ({ children }) => {
         headers: { Authorization: `Bearer ${token}` }
       });
       console.log('User data:', response.data);
-      setUser(response.data);
+
+      // Seleccionar el usuario correcto si la respuesta es un array
+      const activeUser = Array.isArray(response.data) ? response.data[0] : response.data;
+      setUser(activeUser);
     } catch (error) {
       console.error('Error fetching user data:', error);
       logout();
